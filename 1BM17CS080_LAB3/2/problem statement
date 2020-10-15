@@ -1,0 +1,10 @@
+Perform the following DB operations using MongoDB. 
+1. Create  a collection by name Customers with the following attributes.
+ Cust_id, Acc_Bal, Acc_Type
+2. Insert at least 5  values into the table
+3. Write a query to display those records whose total account balance is greater than 
+    1200 of  account type ‘Z’ for each customer_id.
+4. Determine Minimum and Maximum account balance for each customer_id.
+5. Export the created collection into local file system
+6. Drop the table
+7. Import a given csv dataset from local file system into mongodb collection.

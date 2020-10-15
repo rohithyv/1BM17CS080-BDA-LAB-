@@ -1,0 +1,13 @@
+use Student
+show dbs
+db
+db.createCollection("StudentDetails");
+db.StudentDetails.insert({rollno:1,age:18,name:"Saransh",contactno:"8979482991",emailid:"sara@gmail.com"});
+db.StudentDetails.insert({rollno:11,age:18,name:"ABC",contactno:"9123585601",emailid:"ABC@gmail.com"});
+db.StudentDetails.insert({rollno:10,age:19,name:"Abhinav",contactno:"9607852206",emailid:"abhinav@gmail.com"});
+db.StudentDetails.update({rollno:10},{$set:{emailid:"changed@gmail.com"}});
+db.StudentDetails.update({rollno:11},{$set:{name:"FEM"}});
+db.StudentDetails.find()
+// exit from mongo and execute them while systemctl is running
+sudo mongoexport --db Student -c StudentDetails --csv -f _id,rollno,name,contactno,emailid --out exp.txt
+sudo mongoimport --db Student -c StudentDetails --type csv --headerline --file exp.txt

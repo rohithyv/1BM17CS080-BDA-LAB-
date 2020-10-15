@@ -1,0 +1,22 @@
+use Student
+db.createCollection('Customers')
+db.Customers.insert({_id:1,accBal:100000,accType:"Savings"})
+db.Customers.insert({_id:2,accBal:200000,accType:"Z"})
+db.Customers.insert({_id:3,accBal:300000,accType:"Current"})
+db.Customers.insert({_id:4,accBal:400000,accType:"Z"})
+db.Customers.insert({_id:5,accBal:500000,accType:"Savings"})
+db.Customers.find()
+db.Customers.find({accBal: {$gt: 1200}, accType: {$eq: "Z"}})
+db.Customers.aggregate([
+    {   
+        $group: {
+            _id: "$_id",
+            min_bal: {$min: "$accBal"},
+            max_bal: {$max: "$accBal"}
+        }
+    }
+]);
+
+// exit from mongo and execute them while systemctl is running
+sudo mongoexport --db Student -c Customers --csv -f _id,accBal,accType --out exp2.txt
+ sudo mongoimport --db Student -c Customers --type csv --headerline --file exp2.txt
