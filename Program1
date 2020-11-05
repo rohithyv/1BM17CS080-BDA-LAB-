@@ -1,0 +1,70 @@
+cqlsh> use Employee;
+cqlsh:employee> CREATE TABLE Employee_Info (Emp_Id int PRIMARY KEY, Emp_Name text,Designation text, DateOfJoining timestamp, Salary double,Dept_Name text);
+AlreadyExists: Table 'employee.employee_info' already exists
+cqlsh:employee> BEGIN BATCH
+            ... INSERT INTO Employee_Info(Emp_Id , Emp_Name ,Designation , DateOfJoining ,Salary ,Dept_Name) VALUES(117,'Obed Junias','Software Developer','2020-10-19',60000,'Development')
+            ... INSERT INTO Employee_Info(Emp_Id , Emp_Name ,Designation , DateOfJoining ,Salary ,Dept_Name) VALUES(118,'Ashish Chander','Software Developer in Test','2020-01-15',55000,'Testing')
+            ... INSERT INTO Employee_Info(Emp_Id , Emp_Name ,Designation , DateOfJoining ,Salary ,Dept_Name) VALUES(119,'Shrai Lakshman','Operations Lead','2018-04-17',90000,'Operations')
+            ... INSERT INTO Employee_Info(Emp_Id , Emp_Name ,Designation , DateOfJoining ,Salary ,Dept_Name) VALUES(120,'Shreyank','New Talent Recruiter','2019-02-03',65000,'Recruitment')
+            ... INSERT INTO Employee_Info(Emp_Id , Emp_Name ,Designation , DateOfJoining ,Salary ,Dept_Name) VALUES(121,'Shashank Reddy','HR','2019-12-23',62000,'HR')
+            ... APPLY BATCH;
+cqlsh:employee> select * from Employee_info;
+
+ emp_id | dateofjoining                   | dept_name   | designation                | emp_name       | salary
+--------+---------------------------------+-------------+----------------------------+----------------+--------
+    117 | 2020-10-18 18:30:00.000000+0000 | Development |         Software Developer |    Obed Junias |  60000
+    120 | 2019-02-02 18:30:00.000000+0000 | Recruitment |       New Talent Recruiter |       Shreyank |  65000
+    118 | 2020-01-14 18:30:00.000000+0000 |     Testing | Software Developer in Test | Ashish Chander |  55000
+    121 | 2019-12-22 18:30:00.000000+0000 |          HR |                         HR | Shashank Reddy |  62000
+    119 | 2018-04-16 18:30:00.000000+0000 |  Operations |            Operations Lead | Shrai Lakshman |  90000
+
+(5 rows)
+cqlsh:employee> UPDATE Employee_Info SET Emp_Name = 'Karthik Sanikop' , Dept_Name='Sales' WHERE Emp_Id=121;
+cqlsh:employee> select * from Employee_info;
+
+ emp_id | dateofjoining                   | dept_name   | designation                | emp_name        | salary
+--------+---------------------------------+-------------+----------------------------+-----------------+--------
+    117 | 2020-10-18 18:30:00.000000+0000 | Development |         Software Developer |     Obed Junias |  60000
+    120 | 2019-02-02 18:30:00.000000+0000 | Recruitment |       New Talent Recruiter |        Shreyank |  65000
+    118 | 2020-01-14 18:30:00.000000+0000 |     Testing | Software Developer in Test |  Ashish Chander |  55000
+    121 | 2019-12-22 18:30:00.000000+0000 |       Sales |                         HR | Karthik Sanikop |  62000
+    119 | 2018-04-16 18:30:00.000000+0000 |  Operations |            Operations Lead |  Shrai Lakshman |  90000
+
+(5 rows)
+cqlsh:employee> ALTER TABLE Employee_info ADD Project VARCHAR;
+cqlsh:employee> UPDATE employee_info SET project='TIP' WHERE emp_id=120;
+cqlsh:employee> UPDATE employee_info SET project='Sentiment Analysis' WHERE emp_id=121;
+cqlsh:employee> UPDATE employee_info SET project='Facial recognition' WHERE emp_id=118;
+cqlsh:employee> select * from Employee_info;
+
+ emp_id | dateofjoining                   | dept_name   | designation                | emp_name        | project            | salary
+--------+---------------------------------+-------------+----------------------------+-----------------+--------------------+--------
+    117 | 2020-10-18 18:30:00.000000+0000 | Development |         Software Developer |     Obed Junias |               null |  60000
+    120 | 2019-02-02 18:30:00.000000+0000 | Recruitment |       New Talent Recruiter |        Shreyank |                TIP |  65000
+    118 | 2020-01-14 18:30:00.000000+0000 |     Testing | Software Developer in Test |  Ashish Chander | Facial recognition |  55000
+    121 | 2019-12-22 18:30:00.000000+0000 |       Sales |                         HR | Karthik Sanikop | Sentiment Analysis |  62000
+    119 | 2018-04-16 18:30:00.000000+0000 |  Operations |            Operations Lead |  Shrai Lakshman |               null |  90000
+
+(5 rows)
+cqlsh:employee> INSERT INTO employee_info(emp_id,dateofjoining,dept_name,designation,emp_name,project,salary)values(124,'2020-08-08','PR','Senior Manager','Niranjan','Load balancing server',20000) USING TTL 60;
+cqlsh:employee> SELECT TTL(desgination) FROM employee_info where emp_id=124;
+InvalidRequest: Error from server: code=2200 [Invalid query] message="Undefined column name desgination"
+cqlsh:employee> SELECT TTL(designation) FROM employee_info where emp_id=124;
+
+ ttl(designation)
+------------------
+               10
+
+(1 rows)
+cqlsh:employee> select * from Employee_info;
+
+ emp_id | dateofjoining                   | dept_name   | designation                | emp_name        | project            | salary
+--------+---------------------------------+-------------+----------------------------+-----------------+--------------------+--------
+    117 | 2020-10-18 18:30:00.000000+0000 | Development |         Software Developer |     Obed Junias |               null |  60000
+    120 | 2019-02-02 18:30:00.000000+0000 | Recruitment |       New Talent Recruiter |        Shreyank |                TIP |  65000
+    118 | 2020-01-14 18:30:00.000000+0000 |     Testing | Software Developer in Test |  Ashish Chander | Facial recognition |  55000
+    121 | 2019-12-22 18:30:00.000000+0000 |       Sales |                         HR | Karthik Sanikop | Sentiment Analysis |  62000
+    119 | 2018-04-16 18:30:00.000000+0000 |  Operations |            Operations Lead |  Shrai Lakshman |               null |  90000
+
+(5 rows)
+cqlsh:employee>
